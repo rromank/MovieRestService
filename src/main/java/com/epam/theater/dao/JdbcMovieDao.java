@@ -2,32 +2,28 @@ package com.epam.theater.dao;
 
 import com.epam.theater.dao.mapper.MovieMapper;
 import com.epam.theater.domain.Movie;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class JdbcMovieDao extends NamedParameterJdbcDaoSupport implements MovieDao {
 
-    private static final String INSERT = "INSERT INTO movie (title, total_seats, free_seats, date) VALUES (:title, :total_seats, :free_seats, :date)";
-    private static final String SELECT_ALL = "SELECT * FROM movie";
-    private static final String SELECT_BY_ID = "SELECT * FROM movie WHERE movie_id = :movie_id";
-    private static final String UPDATE_BY_ID = "UPDATE movie SET title = :title, total_seats = :total_seats, free_seats = :free_seats, date = :date WHERE movie_id = :movie_id";
-    private static final String DELETE_BY_ID = "DELETE FROM movie WHERE movie_id = :movie_id";
+    @Resource(name="queries")
+    private Map<String, String> queries;
 
     @Override
     public Movie add(Movie movie) {
         SqlParameterSource parameterSource = getMovieParams(movie);
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        getNamedParameterJdbcTemplate().update(INSERT, parameterSource, keyHolder);
+        getNamedParameterJdbcTemplate().update(queries.get("MOVIE_INSERT"), parameterSource, keyHolder);
 
         int id = getGeneratedId(keyHolder);
         return cloneAndSetId(movie, id);
@@ -35,26 +31,26 @@ public class JdbcMovieDao extends NamedParameterJdbcDaoSupport implements MovieD
 
     @Override
     public List<Movie> getAll() {
-        return getJdbcTemplate().query(SELECT_ALL, new MovieMapper());
+        return getJdbcTemplate().query(queries.get("MOVIE_SELECT_ALL"), new MovieMapper());
     }
 
     @Override
     public Movie getById(int id) {
         SqlParameterSource parameterSource = new MapSqlParameterSource("movie_id", id);
-        return getNamedParameterJdbcTemplate().queryForObject(SELECT_BY_ID, parameterSource, new MovieMapper());
+        return getNamedParameterJdbcTemplate().queryForObject(queries.get("MOVIE_SELECT_BY_ID"), parameterSource, new MovieMapper());
     }
 
     @Override
     public Movie update(Movie movie) {
         SqlParameterSource parameterSource = getMovieParams(movie);
-        getNamedParameterJdbcTemplate().update(UPDATE_BY_ID, parameterSource);
+        getNamedParameterJdbcTemplate().update(queries.get("MOVIE_UPDATE_BY_ID"), parameterSource);
         return movie;
     }
 
     @Override
     public boolean delete(int id) {
         SqlParameterSource parameterSource = new MapSqlParameterSource("movie_id", id);
-        int deletedCount = getNamedParameterJdbcTemplate().update(DELETE_BY_ID, parameterSource);
+        int deletedCount = getNamedParameterJdbcTemplate().update(queries.get("MOVIE_DELETE_BY_ID"), parameterSource);
         return deletedCount > 0;
     }
 
