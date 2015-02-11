@@ -2,18 +2,16 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+
+       <import resource="queries.xml"/>
 
        <context:component-scan base-package="com.epam.theater" />
 
-       <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-              <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-              <property name="url" value="jdbc:mysql://localhost/theater" />
-              <property name="username" value="root" />
-              <property name="password" value="" />
-              <property name="initialSize" value="5" />
-              <property name="maxActive" value="10" />
-       </bean>
+       <jdbc:embedded-database id="dataSource">
+              <jdbc:script location="classpath:db/schema.sql"/>
+       </jdbc:embedded-database>
 
        <bean id="movieDao" class="com.epam.theater.dao.JdbcMovieDao">
               <property name="dataSource" ref="dataSource"/>
