@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 @ContextConfiguration(locations = "classpath:spring-config.xml")
 public class JdbcMovieDaoTest {
 
-    private final static Logger logger = LoggerFactory.getLogger(JdbcMovieDaoTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(JdbcMovieDaoTest.class);
 
     private static final String DATE_FORMAT = "dd.MM.yyyy HH:mm:ss";
     private static final String MOVIE_ONE_TITLE = "movie one";

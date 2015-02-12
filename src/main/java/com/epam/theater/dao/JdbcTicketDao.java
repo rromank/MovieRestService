@@ -54,6 +54,12 @@ public class JdbcTicketDao extends NamedParameterJdbcDaoSupport implements Ticke
         return getNamedParameterJdbcTemplate().queryForObject(queries.get("TICKET_SELECT_UNUSED_SEAT_NUMBER"), parameterSource, Integer.class);
     }
 
+    @Override
+    public boolean deleteAll() {
+        int deletedCount = getJdbcTemplate().update(queries.get("TICKET_DELETE_ALL"));
+        return deletedCount > 0;
+    }
+
     private SqlParameterSource getTicketParams(Ticket ticket) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("id", ticket.getId());

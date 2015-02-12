@@ -6,6 +6,13 @@ public class Ticket implements Persistable {
     private Movie movie;
     private int seatNumber;
 
+    public Ticket() {}
+
+    public Ticket(Movie movie, int seatNumber) {
+        this.movie = movie;
+        this.seatNumber = seatNumber;
+    }
+
     @Override
     public int getId() {
         return id;
@@ -39,10 +46,8 @@ public class Ticket implements Persistable {
 
         Ticket ticket = (Ticket) o;
 
-        if (seatNumber != ticket.seatNumber) return false;
-        if (movie != null ? !movie.equals(ticket.movie) : ticket.movie != null) return false;
+        return seatNumber == ticket.seatNumber && !(movie != null ? !movie.equals(ticket.movie) : ticket.movie != null);
 
-        return true;
     }
 
     @Override

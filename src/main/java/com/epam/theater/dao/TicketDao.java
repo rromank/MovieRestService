@@ -16,4 +16,6 @@ public interface TicketDao {
 
     public int getUnusedSeatNumber(int movieId);
 
+    public boolean deleteAll();
+
 }

@@ -19,6 +19,7 @@
                 <entry key="TICKET_DELETE_BY_ID" value="DELETE FROM ticket WHERE ticket_id = :ticket_id"/>
                 <entry key="TICKET_SELECT_BY_ID" value="SELECT * FROM ticket LEFT JOIN movie ON ticket.movie_id = movie.movie_id WHERE ticket_id = :ticket_id"/>
                 <entry key="TICKET_SELECT_UNUSED_SEAT_NUMBER" value="SELECT min(unused) AS unused FROM (SELECT MIN(t1.seat_number)+1 as unused FROM ticket AS t1 WHERE NOT EXISTS (SELECT * FROM ticket AS t2 WHERE t2.seat_number = t1.seat_number+1) AND movie_id = :movie_id UNION SELECT 1 FROM DUAL WHERE NOT EXISTS (SELECT * FROM ticket WHERE seat_number = 1 AND movie_id = :movie_id)) AS subquery"/>
+                <entry key="TICKET_DELETE_ALL" value="DELETE FROM ticket"/>
             </map>
         </constructor-arg>
     </bean>
