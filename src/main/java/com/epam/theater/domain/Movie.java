@@ -14,6 +14,15 @@ public class Movie implements Persistable {
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern ="dd.MM.yyyy HH:mm:ss")
     private Date date;
 
+    public Movie() {}
+
+    public Movie(String title, int totalSeats, int freeSeats, Date date) {
+        this.title = title;
+        this.totalSeats = totalSeats;
+        this.freeSeats = freeSeats;
+        this.date = date;
+    }
+
     @Override
     public int getId() {
         return id;
@@ -67,9 +76,8 @@ public class Movie implements Persistable {
         if (freeSeats != movie.freeSeats) return false;
         if (totalSeats != movie.totalSeats) return false;
         if (date != null ? !date.equals(movie.date) : movie.date != null) return false;
-        if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
+        return !(title != null ? !title.equals(movie.title) : movie.title != null);
 
-        return true;
     }
 
     @Override

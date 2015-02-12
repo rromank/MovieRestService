@@ -54,6 +54,12 @@ public class JdbcMovieDao extends NamedParameterJdbcDaoSupport implements MovieD
         return deletedCount > 0;
     }
 
+    @Override
+    public boolean deleteAll() {
+        int deletedCount = getJdbcTemplate().update(queries.get("MOVIE_DELETE_ALL"));
+        return deletedCount > 0;
+    }
+
     private SqlParameterSource getMovieParams(Movie movie) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("movie_id", movie.getId());

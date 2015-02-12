@@ -16,4 +16,6 @@ public interface MovieDao {
 
     public boolean delete(int id);
 
+    public boolean deleteAll();
+
 }

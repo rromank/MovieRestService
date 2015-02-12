@@ -15,7 +15,7 @@ public class MovieMapper implements RowMapper<Movie> {
         movie.setTitle(resultSet.getString("title"));
         movie.setTotalSeats(resultSet.getInt("total_seats"));
         movie.setFreeSeats(resultSet.getInt("free_seats"));
-        movie.setDate(resultSet.getDate("date"));
+        movie.setDate(resultSet.getTimestamp("date"));
         return movie;
     }
 
