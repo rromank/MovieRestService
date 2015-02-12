@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,23 +20,25 @@ public class MovieController {
     private MovieService movieService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Movie> getAll() {
-        return movieService.getAll();
+    public ResponseEntity<List<Movie>> getAll() {
+        return new ResponseEntity<List<Movie>>(movieService.getAll(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Movie getById(@PathVariable(value = "id") int id) {
-        return movieService.getById(id);
+    public ResponseEntity<Movie>getById(@PathVariable(value = "id") int id) {
+        return new ResponseEntity<Movie>(movieService.getById(id), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Movie add(@RequestBody Movie movie) {
-        return movieService.add(movie);
+    public ResponseEntity<Movie> add(@Valid @RequestBody Movie movie) {
+        Movie storedMovie = movieService.add(movie);
+        return new ResponseEntity<Movie>(storedMovie, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public Movie update(@RequestBody Movie movie) {
-        return movieService.update(movie);
+    public ResponseEntity<Movie> update(@Valid @RequestBody Movie movie) {
+        Movie updatedMovie = movieService.update(movie);
+        return new ResponseEntity<Movie>(updatedMovie, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

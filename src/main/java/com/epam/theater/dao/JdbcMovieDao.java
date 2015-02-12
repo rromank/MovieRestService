@@ -2,6 +2,7 @@ package com.epam.theater.dao;
 
 import com.epam.theater.dao.mapper.MovieMapper;
 import com.epam.theater.domain.Movie;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -36,8 +37,14 @@ public class JdbcMovieDao extends NamedParameterJdbcDaoSupport implements MovieD
 
     @Override
     public Movie getById(int id) {
+        Movie movie = null;
         SqlParameterSource parameterSource = new MapSqlParameterSource("movie_id", id);
-        return getNamedParameterJdbcTemplate().queryForObject(queries.get("MOVIE_SELECT_BY_ID"), parameterSource, new MovieMapper());
+        try {
+            movie = getNamedParameterJdbcTemplate().queryForObject(queries.get("MOVIE_SELECT_BY_ID"), parameterSource, new MovieMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            logger.info("Movie with id: " + id + " not found.");
+        }
+        return movie;
     }
 
     @Override
