@@ -16,7 +16,7 @@ public class MovieValidator implements Validator {
         Movie movie = (Movie) object;
 
         if (isNotValidTitle(movie)) {
-            errors.rejectValue("title", "title is empty");
+            errors.rejectValue("title", "title length can't be less than 3 symbols");
         }
         if (isNotValidTotalSeats(movie)) {
             errors.rejectValue("totalSeats", "total_seats invalid value");
@@ -35,7 +35,7 @@ public class MovieValidator implements Validator {
     }
 
     private boolean isNotValidTitle(Movie movie) {
-        return movie.getTitle() == null;
+        return movie.getTitle() == null || movie.getTitle().length() < 3;
     }
 
 }

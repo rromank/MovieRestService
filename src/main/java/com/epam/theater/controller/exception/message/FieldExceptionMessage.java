@@ -1,15 +1,14 @@
-package com.epam.theater.controller;
+package com.epam.theater.controller.exception.message;
 
-public class ExceptionMessage {
+public class FieldExceptionMessage extends ExceptionMessage {
 
     private String field;
     private String rejectedValue;
-    private String code;
 
-    public ExceptionMessage(String field, String rejectedValue, String code) {
+    public FieldExceptionMessage(String field, String rejectedValue, String error) {
+        super(error);
         this.field = field;
         this.rejectedValue = rejectedValue;
-        this.code = code;
     }
 
     public String getField() {
@@ -26,14 +25,6 @@ public class ExceptionMessage {
 
     public void setRejectedValue(String rejectedValue) {
         this.rejectedValue = rejectedValue;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
 }

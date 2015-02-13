@@ -4,26 +4,33 @@ import com.epam.theater.dao.MovieDao;
 import com.epam.theater.dao.TicketDao;
 import com.epam.theater.domain.Movie;
 import com.epam.theater.domain.Ticket;
+import com.epam.theater.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
 public class TicketServiceImpl implements TicketService {
 
     @Autowired
-    @Qualifier(value = "ticketDao")
     private TicketDao ticketDao;
 
     @Autowired
-    @Qualifier(value = "movieDao")
     private MovieDao movieDao;
 
     @Override
     public Ticket buy(int movieId) {
         Movie movie = movieDao.getById(movieId);
+        if (movie == null) {
+            throw new ServiceException("movie with this id is not exists");
+        }
+
         decreaseFreeSeats(movie);
         int unusedSeatNumber = ticketDao.getUnusedSeatNumber(movie.getId());
         Ticket ticket = new Ticket();
@@ -31,6 +38,11 @@ public class TicketServiceImpl implements TicketService {
         ticket.setSeatNumber(unusedSeatNumber);
 
         return ticketDao.add(ticket);
+    }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = ServiceException.class)
+    public String defaultExceptionHandler() {
+        return "asd";
     }
 
     @Override
