@@ -3,6 +3,7 @@ package com.epam.theater.controller;
 import com.epam.theater.domain.Movie;
 import com.epam.theater.domain.validator.MovieValidator;
 import com.epam.theater.service.MovieService;
+import com.epam.theater.service.message.StatusMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -49,9 +50,15 @@ public class MovieController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> delete(@PathVariable(value = "id") int id) {
+    public StatusMessage delete(@PathVariable(value = "id") int id) {
         boolean isDeleted = movieService.delete(id);
-        return new ResponseEntity<Boolean>(isDeleted, HttpStatus.OK);
+        StatusMessage statusMessage = new StatusMessage();
+        if (isDeleted) {
+            statusMessage.setStatus(StatusMessage.Status.SUCCESS);
+        } else {
+            statusMessage.setStatus(StatusMessage.Status.ERROR);
+        }
+        return statusMessage;
     }
 
 }

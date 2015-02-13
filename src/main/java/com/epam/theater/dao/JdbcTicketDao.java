@@ -3,6 +3,7 @@ package com.epam.theater.dao;
 import com.epam.theater.dao.mapper.TicketMapper;
 import com.epam.theater.domain.Movie;
 import com.epam.theater.domain.Ticket;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -44,8 +45,14 @@ public class JdbcTicketDao extends NamedParameterJdbcDaoSupport implements Ticke
 
     @Override
     public Ticket getById(int id) {
+        Ticket ticket = null;
         SqlParameterSource parameterSource = new MapSqlParameterSource("ticket_id", id);
-        return getNamedParameterJdbcTemplate().queryForObject(queries.get("TICKET_SELECT_BY_ID"), parameterSource, new TicketMapper());
+        try {
+            ticket = getNamedParameterJdbcTemplate().queryForObject(queries.get("TICKET_SELECT_BY_ID"), parameterSource, new TicketMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            logger.error("Ticket with id: " + id + "not found.");
+        }
+        return ticket;
     }
 
     @Override

@@ -1,12 +1,12 @@
-package com.epam.theater.controller.exception.message;
+package com.epam.theater.service.message;
 
-public class FieldExceptionMessage extends ExceptionMessage {
+public class FieldStatusMessage extends StatusMessage {
 
     private String field;
     private String rejectedValue;
 
-    public FieldExceptionMessage(String field, String rejectedValue, String error) {
-        super(error);
+    public FieldStatusMessage(Status status, String message, String field, String rejectedValue) {
+        super(status, message);
         this.field = field;
         this.rejectedValue = rejectedValue;
     }

@@ -42,7 +42,7 @@ public class JdbcMovieDao extends NamedParameterJdbcDaoSupport implements MovieD
         try {
             movie = getNamedParameterJdbcTemplate().queryForObject(queries.get("MOVIE_SELECT_BY_ID"), parameterSource, new MovieMapper());
         } catch (EmptyResultDataAccessException ex) {
-            logger.info("Movie with id: " + id + " not found.");
+            logger.error("Movie with id: " + id + " not found.");
         }
         return movie;
     }

@@ -2,13 +2,15 @@ package com.epam.theater.controller;
 
 import com.epam.theater.domain.Ticket;
 import com.epam.theater.service.TicketService;
+import com.epam.theater.service.message.StatusMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -26,9 +28,15 @@ public class TicketController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Boolean> delete(@PathVariable(value = "id") int id) {
+    public StatusMessage delete(@PathVariable(value = "id") int id) {
         boolean isDeleted = ticketService.delete(id);
-        return new ResponseEntity<Boolean>(isDeleted, HttpStatus.OK);
+        StatusMessage statusMessage = new StatusMessage();
+        if (isDeleted) {
+            statusMessage.setStatus(StatusMessage.Status.SUCCESS);
+        } else {
+            statusMessage.setStatus(StatusMessage.Status.ERROR);
+        }
+        return statusMessage;
     }
 
     @RequestMapping(value = "/buy/{movie_id}", method = RequestMethod.GET)
@@ -36,7 +44,5 @@ public class TicketController {
         Ticket ticket = ticketService.buy(movieId);
         return new ResponseEntity<Ticket>(ticket, HttpStatus.OK);
     }
-
-
 
 }

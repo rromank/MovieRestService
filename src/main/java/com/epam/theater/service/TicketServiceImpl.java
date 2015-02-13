@@ -6,13 +6,8 @@ import com.epam.theater.domain.Movie;
 import com.epam.theater.domain.Ticket;
 import com.epam.theater.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
@@ -26,11 +21,9 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public Ticket buy(int movieId) {
-        Movie movie = movieDao.getById(movieId);
-        if (movie == null) {
-            throw new ServiceException("movie with this id is not exists");
-        }
+        Movie movie = getMovie(movieId);
 
+        checkFreeSeats(movie);
         decreaseFreeSeats(movie);
         int unusedSeatNumber = ticketDao.getUnusedSeatNumber(movie.getId());
         Ticket ticket = new Ticket();
@@ -47,7 +40,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public boolean delete(int id) {
-        Ticket ticket = ticketDao.getById(id);
+        Ticket ticket = getTicket(id);
         Movie movie = ticket.getMovie();
         increaseFreeSeats(movie);
         return ticketDao.delete(id);
@@ -70,6 +63,28 @@ public class TicketServiceImpl implements TicketService {
             movie.setFreeSeats(movie.getFreeSeats() + 1);
             movieDao.update(movie);
         }
-   }
+    }
+
+    private Ticket getTicket(int id) {
+        Ticket ticket = ticketDao.getById(id);
+        if (ticket == null) {
+            throw new ServiceException("ticket with this id is not exists");
+        }
+        return ticket;
+    }
+
+    private Movie getMovie(int id) {
+        Movie movie = movieDao.getById(id);
+        if (movie == null) {
+            throw new ServiceException("movie with this id is not exists");
+        }
+        return movie;
+    }
+
+    private void checkFreeSeats(Movie movie) {
+        if (movie.getFreeSeats() == 0) {
+            throw new ServiceException("no free seats");
+        }
+    }
 
 }
