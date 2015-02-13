@@ -30,8 +30,8 @@ public class TicketController {
     }
 
     @RequestMapping(value = "/buy/{movie_id}", method = RequestMethod.GET)
-    public Ticket buy(@PathVariable(value = "movie_id") int movieId) {
-        return ticketService.buy(movieId);
+    public ResponseEntity<Ticket> buy(@PathVariable(value = "movie_id") int movieId) {
+        return new ResponseEntity<Ticket>(ticketService.buy(movieId), HttpStatus.OK);
     }
 
 }

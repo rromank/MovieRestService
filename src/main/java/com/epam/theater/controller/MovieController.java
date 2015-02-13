@@ -1,11 +1,13 @@
 package com.epam.theater.controller;
 
 import com.epam.theater.domain.Movie;
+import com.epam.theater.domain.validator.MovieValidator;
 import com.epam.theater.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,6 +20,11 @@ public class MovieController {
     @Autowired
     @Qualifier(value = "movieService")
     private MovieService movieService;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(new MovieValidator());
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Movie>> getAll() {

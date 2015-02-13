@@ -2,21 +2,14 @@ package com.epam.theater.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class Movie implements Persistable {
 
     private int id;
 
-    @NotNull
     private String title;
-
-    @NotNull
-    @Min(1)
     private int totalSeats;
-
     private int freeSeats;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern ="dd.MM.yyyy HH:mm:ss")
@@ -65,7 +58,6 @@ public class Movie implements Persistable {
         this.freeSeats = freeSeats;
     }
 
-//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern ="dd.MM.yyyy HH:mm:ss")
     public Date getDate() {
         return date;
     }
