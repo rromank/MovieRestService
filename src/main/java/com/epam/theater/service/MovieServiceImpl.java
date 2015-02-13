@@ -4,7 +4,6 @@ import com.epam.theater.dao.MovieDao;
 import com.epam.theater.domain.Movie;
 import com.epam.theater.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

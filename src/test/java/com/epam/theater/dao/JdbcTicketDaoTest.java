@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:spring-config.xml")
+@ContextConfiguration("file:src/main/webapp/WEB-INF/dispatcher-servlet.xml")
 public class JdbcTicketDaoTest {
 
     private static final int SEAT_NUMBER = 1;

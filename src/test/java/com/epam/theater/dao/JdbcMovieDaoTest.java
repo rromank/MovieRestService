@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:spring-config.xml")
+@ContextConfiguration("file:src/main/webapp/WEB-INF/dispatcher-servlet.xml")
 public class JdbcMovieDaoTest {
 
     private static final Logger logger = LoggerFactory.getLogger(JdbcMovieDaoTest.class);
