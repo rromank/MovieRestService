@@ -2,6 +2,7 @@ package com.epam.theater.service;
 
 import com.epam.theater.dao.MovieDao;
 import com.epam.theater.domain.Movie;
+import com.epam.theater.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie getById(int id) {
-        return movieDao.getById(id);
+        return getMovie(id);
     }
 
     @Override
@@ -37,6 +38,14 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public boolean delete(int id) {
         return movieDao.delete(id);
+    }
+
+    private Movie getMovie(int id) {
+        Movie movie = movieDao.getById(id);
+        if (movie == null) {
+            throw new ServiceException("movie with this id is not exists");
+        }
+        return movie;
     }
 
 }
