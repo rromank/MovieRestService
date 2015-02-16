@@ -6,9 +6,7 @@ import com.epam.theater.service.message.StatusMessage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -20,6 +18,7 @@ import java.util.List;
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
+    @Override
     protected @ResponseBody ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         List<FieldStatusMessage> exceptionMessages = new ArrayList<>();
@@ -30,29 +29,17 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        StatusMessage statusMessage = new StatusMessage(StatusMessage.Status.ERROR, "not readable");
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        StatusMessage statusMessage = new StatusMessage(StatusMessage.Status.ERROR, ex.getMessage());
         return new ResponseEntity<Object>(statusMessage, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ServiceException.class)
-    public @ResponseBody StatusMessage handleServiceException() {
-        return new StatusMessage(StatusMessage.Status.ERROR, "bad request");
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleServiceException(ServiceException ex) {
+        StatusMessage statusMessage = new StatusMessage(StatusMessage.Status.ERROR, ex.getMessage());
+        return new ResponseEntity<Object>(statusMessage, HttpStatus.BAD_REQUEST);
     }
-
-    @Override
-    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        StatusMessage statusMessage = new StatusMessage(StatusMessage.Status.ERROR, "method not allowed");
-        return new ResponseEntity<Object>(statusMessage, HttpStatus.METHOD_NOT_ALLOWED);
-    }
-
-    //
-//    @ExceptionHandler(RuntimeException.class)
-//    public @ResponseBody ResponseEntity<Object> handleAllExceptions(ServiceException ex) {
-//        String message = ex.getMessage();
-//        StatusMessage statusMessage = new StatusMessage(StatusMessage.Status.ERROR, message);
-//        return new ResponseEntity<Object>(statusMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 
     @RequestMapping(value = "/error")
     public @ResponseBody StatusMessage error() {
