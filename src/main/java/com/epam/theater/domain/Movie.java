@@ -7,7 +7,6 @@ import java.util.Date;
 public class Movie implements Persistable {
 
     private int id;
-
     private String title;
     private int totalSeats;
     private int freeSeats;
@@ -77,7 +76,6 @@ public class Movie implements Persistable {
         if (totalSeats != movie.totalSeats) return false;
         if (date != null ? !date.equals(movie.date) : movie.date != null) return false;
         return !(title != null ? !title.equals(movie.title) : movie.title != null);
-
     }
 
     @Override
